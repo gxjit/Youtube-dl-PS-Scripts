@@ -2,15 +2,23 @@
 
 $format = "140"
 $URL = "https://www.youtube.com/user/khanacademy"
+$output = "%(uploader)s/%(view_count)s - %(title)s - %(upload_date)s.%(ext)s"
+$IgnoreErrors = 0
+
+$IArg = "--abort-on-error"
+if ($IgnoreErrors) {
+   $IArg = "--ignore-errors"
+}
 
 Start-Transcript -Path "$PSScriptRoot\DownloadLogPlChVids.txt" -Append
 
 Set-Location $PSScriptRoot
 
-youtube-dl --abort-on-error `
-    --format "$format" `
-    --output "%(playlist_uploader)s/%(playlist_title)s/%(playlist_index)s - %(title)s.%(ext)s" `
-    "$URL"
+Write-Host @"
+youtube-dl $IArg --format "$format" --output "$output" "$URL"
+"@
+
+youtube-dl $IArg --format "$format" --output "$output" "$URL"
 
 Stop-Transcript
 

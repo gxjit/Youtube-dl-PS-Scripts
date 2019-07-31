@@ -4,18 +4,27 @@ $PLStart = "1"
 $PLEnd = "100"
 $format = "140"
 $URL = "https://www.youtube.com/playlist?list=PLSQl0a2vh4HB9UeibLURBlcdR4XzputM9"
+$output = "%(playlist_uploader)s/%(playlist_title)s/%(playlist_index)s - %(title)s.%(ext)s"
+$IgnoreErrors = 0
+
+$IArg = "--abort-on-error"
+if ($IgnoreErrors) {
+   $IArg = "--ignore-errors"
+}
 
 Start-Transcript -Path "$PSScriptRoot\DownloadLogPl-$PLStart-$PLEnd.txt" -Append
 
 Set-Location $PSScriptRoot
 
-youtube-dl --abort-on-error `
-    --yes-playlist  `
-    --playlist-start "$PLStart" `
-    --playlist-end "$PLEnd" `
-    --format "$format" `
-    --output "%(playlist_uploader)s/%(playlist_title)s/%(playlist_index)s - %(title)s.%(ext)s" `
-    "$URL"
+Write-Host @"
+youtube-dl $IArg --yes-playlist `
+    --playlist-start "$PLStart" --playlist-end "$PLEnd" `
+    --format "$format" --output "$output" "$URL"
+"@
+
+youtube-dl $IArg --yes-playlist `
+    --playlist-start "$PLStart" --playlist-end "$PLEnd" `
+    --format "$format" --output "$output" "$URL"
 
 Stop-Transcript
 
